@@ -1,0 +1,43 @@
+def format_str(data):
+    ch_arr = []
+    for ch in data:
+        if not ch.isalnum() and ch != '.' and ch != '/':
+            return -1
+        ch_arr_len = len(ch_arr)
+        if ch == '/' and ch_arr_len > 0 and ch == ch_arr[ch_arr_len - 1]:
+            continue
+        ch_arr.append(ch)
+    return ''.join(ch_arr)
+
+
+def mycd(src, dest):
+    src_str = format_str(src)
+    dest_str = format_str(dest)
+    if dest_str == -1:
+        print('{} : is invalid file or directory'.format(dest))
+    else:
+        if dest_str[0] == '/':
+            print(dest_str)
+        elif dest_str == '.':
+            print(src_str)
+        else:
+            src_path = src.split('/')
+            dest_path = dest_str.split('/')
+            result = []
+            i = 0
+            while i < len(dest_path):
+                if src_path[i] == dest_path[i]:
+                    result.append(src_path[i])
+                elif len(result) > 0 and dest_path[i] == "..":
+                    result.pop()
+                elif dest_path[i] != "." and dest_path[i] != "..":
+                    result.extend(dest_path[i:len(dest_path)])
+                    break
+                i += 1
+            print('/'.join(result))
+
+
+if __name__ == '__main__':
+    mycd('/abc/xyz', '.')
+    mycd('/abc/xyz', '/abc/klm')
+    mycd('/abc/x/y/z', 'y/z')
